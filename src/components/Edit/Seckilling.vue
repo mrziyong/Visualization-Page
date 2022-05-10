@@ -16,6 +16,7 @@
                 v-model="list.data"
                 tag="ul"
                 draggable="li"
+                animation="600"
                 v-if="list.data && list.data.length > 0" 
                 class="list"
             >

@@ -32,6 +32,7 @@
             >
                 <Draggable
                     v-model="view"
+                    animation="600"
                     draggable=".item"
                 >
                     <template v-for="(item, index) in view">
@@ -68,6 +69,7 @@
 
         <div class="submit-btn">
             <el-button @click="submit">提交页面</el-button>
+            
         </div>
     </section>
 </template>
@@ -85,6 +87,11 @@ import Divider from '@/components/View/Divider'
 import Seckilling from '@/components/View/Seckilling'
 import Blank from '@/components/View/Blank'
 import Navigation from '@/components/View/Navigation'
+
+// 请求接口
+import { login } from "@/api/login"
+import { add, info } from "@/api/page"
+import { list } from "@/api/banner"
 export default {
     components: {
         EditForm,
@@ -165,7 +172,9 @@ export default {
                 1: 'one',
                 2: 'two',
                 3: 'three'
-            }
+            },
+
+            file: ''
         }
     },
     computed: {
@@ -198,6 +207,8 @@ export default {
             this.$message.success('数据提交成功，请按F12打开控制台查看待提交数据集合！')
 
             console.log(form)  // 提交的数据，根据接口形式修改
+
+            this.setLogin()
 
             return
 
@@ -244,6 +255,35 @@ export default {
                 // 提交数据
             }
         },
+
+        // 登录
+        setLogin() {
+            let data = { userName: 'admin', password: '123456' }
+            login('admin', '123456').then((res) => {
+                console.log(res)
+                if (res.status === 10000) {
+                    this.getList()
+                }
+            })
+        },
+
+        // 
+        getList() {
+            list().then((res) => {
+                console.log(res)
+                this.setReq()
+            })
+        },
+
+        // 点击提交验证完成后发送请求
+        setReq() {
+            let pageData = JSON.stringify(this.view)
+            let data = "/images/19ed87f2-ed5e-4d11-bdee-70b055191aa5.jpg"
+            add(data).then((res) => {
+                console.log(res)
+            })
+        },
+
         // 切换视图组件
         selectType(index) {
             this.isRight = false
